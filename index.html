@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>セキュのハッピーガーデン｜経路を見てみよう</title>
+<style>
+:root{--bg:#FAF9F5;--card:#FFFFFF;--soft:#F4F3EE;--text:#1F1E1D;--sub:#5F5E5A;--muted:#8A8983;--line:rgba(0,0,0,.12);--accent:#185FA5;--accent-bg:#E6F1FB;--warn:#854F0B;--warn-bg:#FAEEDA;--danger:#A32D2D;--danger-bg:#FCEBEB;--mono:ui-monospace,"Cascadia Mono",Consolas,"Menlo",monospace}
+@media (prefers-color-scheme:dark){:root{--bg:#1A1A19;--card:#242422;--soft:#2C2C2A;--text:#ECEBE6;--sub:#B4B2A9;--muted:#888780;--line:rgba(255,255,255,.14);--accent:#85B7EB;--accent-bg:#0C447C;--warn:#FAC775;--warn-bg:#412402;--danger:#F09595;--danger-bg:#501313}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Hiragino Sans","Yu Gothic UI","Meiryo",sans-serif;line-height:1.6}
+.wrap{max-width:1360px;margin:0 auto;padding:16px}
+.top{font-size:13px;color:var(--sub);margin:0 0 10px}
+.layout{display:grid;gap:16px}
+.right{order:-1}
+@media (min-width:980px){.layout{grid-template-columns:minmax(0,1.25fr) minmax(380px,.75fr)}.right{order:0;position:sticky;top:12px;align-self:start;max-height:calc(100vh - 24px);overflow:auto}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+button{font:inherit;font-size:13px;padding:5px 12px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--sub);cursor:pointer}
+button:hover{border-color:var(--sub)}
+button.on{background:var(--accent-bg);color:var(--accent);border-color:var(--accent)}
+.row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:0 0 8px}
+.lbl{font-size:13px;color:var(--sub);margin-right:4px}
+.ms{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 12px;font-size:14px;margin:8px 0 0}
+.ms dt{color:var(--sub);font-size:12px;padding-top:3px}.ms dd{margin:0}
+.rr{display:grid;grid-template-columns:20px auto minmax(0,1fr);gap:4px 8px;align-items:baseline;padding:4px 8px;border-radius:8px;color:var(--sub);font-size:14px;line-height:1.5}
+.rr.on{background:var(--accent-bg);color:var(--text)}
+.who{font-size:12px;padding:1px 8px;border-radius:8px;white-space:nowrap}
+.pr{grid-column:3;display:flex;flex-wrap:wrap;gap:4px;margin-top:2px}
+.pn{font-family:var(--mono);font-size:12px;color:var(--sub)}
+.ly{font-size:11px;padding:0 6px;border-radius:6px;background:var(--soft);color:var(--sub);border:1px solid var(--line)}
+.legend{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.6}
+.box{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:14px;margin:0 0 10px}
+.jk{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 10px;font-size:14px;margin:6px 0 0}
+.jk dt{color:var(--warn);font-size:12px;padding-top:2px}.jk dd{margin:0}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.cd{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+.badge{font-size:12px;padding:2px 8px;border-radius:8px;margin-right:6px}
+.nd{cursor:pointer;transition:opacity .3s}.nd.dim{opacity:.5}
+.edge{stroke:#C9C6BC;stroke-width:2;stroke-linecap:round;fill:none}
+.edge.hot{stroke:#378ADD;stroke-width:2.6;stroke-dasharray:6 5}
+@keyframes flow{to{stroke-dashoffset:-22}}
+@media (prefers-reduced-motion:no-preference){.edge.hot{animation:flow 1.6s linear infinite}}
+.end{display:none;margin-top:10px;padding:10px 14px;border-radius:12px;background:var(--accent-bg);color:var(--accent);font-size:14px}
+input[type=range]{accent-color:#378ADD}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top">セキュのハッピーガーデン｜科目B 構造の基礎入れ｜経路を見てみよう（試作）</div>
+<div class="layout">
+<div class="left">
+<div class="card">
+<svg id="map" width="100%" viewBox="0 0 680 380" role="img" aria-label="社内 LAN、DMZ、インターネット、社外のサーバの4つの島に、顔のついた機器を置いた構成図"></svg>
+<div class="row" style="margin:8px 0 0;font-size:13px;color:var(--sub)">
+<span>速さ</span><span>ゆっくり</span><input type="range" id="spd" min="50" max="300" step="10" value="120" style="flex:1;max-width:220px"><span>はやい</span>
+<span style="margin-left:auto">目を閉じている機器＝この手順では通らない所（記録も残らない）</span>
+</div>
+<div class="end" id="end">1周目はここまで。次は「2周目 立場で見る」で、★ の付いた機器を押してみよう <button id="go2" style="margin-left:8px">2周目へ</button></div>
+</div>
+<div style="margin-top:12px">
+<div class="row" id="modes"></div>
+<div class="row"><button id="prev" aria-label="前の手順">◀</button><span id="steps" style="display:contents"></span><button id="next" aria-label="次の手順">▶</button><button id="again">↻ もう一度</button></div>
+<div class="row" id="viewrow" style="display:none"><span class="lbl">立ち位置</span><span id="views" style="display:contents"></span></div>
+<div class="box" id="box">
+<div style="flex:none;width:40px;display:flex;justify-content:center"><svg id="mic" width="28" height="28" viewBox="0 0 28 28" aria-hidden="true" style="margin-top:4px"><rect x="10" y="3" width="8" height="14" rx="4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M6 13a8 8 0 0 0 16 0M14 21v4M10 25h8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><svg id="av" width="40" height="40" viewBox="0 0 40 40" aria-hidden="true" style="display:none"></svg></div>
+<div style="min-width:0;flex:1"><div id="bx-h" style="font-size:13px;margin-bottom:2px"></div><div id="bx-b"></div></div>
+</div>
+<div style="font-size:13px;color:var(--sub);margin:4px 0 6px">この手順に関係するカード</div>
+<div class="cards" id="cards"></div>
+</div>
+</div>
+<div class="right">
+<div class="card" style="margin:0 0 10px">
+<div style="font-size:12px;color:var(--sub)">まとまり1 ネットワークの通り道｜場面 1</div>
+<div style="font-size:20px;font-weight:500;margin:2px 0 0">会社の PC で、取引先の Web サイトを開くまで</div>
+<dl class="ms">
+<dt>ゴール</dt><dd>A さんのブラウザに、取引先のページが出る</dd>
+<dt>通る順</dt><dd><div id="route"></div><div class="legend">層：L2 データリンク層（MAC アドレス）・L3 ネットワーク層（IP アドレス）・L4 トランスポート層（TCP・UDP とポート）・L7 アプリケーション層。TLS は L4 と L7 の間（L5〜L6 相当）。ポートまで書き換える NAPT は L4 にもかかる</div></dd>
+<dt>見どころ</dt><dd>どの機器に何が見えて、どこに記録が残るか（FW・プロキシ・DNS の立場）</dd>
+<dt>例</dt><dd>朝、社員の A さんが会社の PC の電源を入れ、ブラウザのお気に入りから取引先のサイト <span style="font-family:var(--mono);font-size:13px">https://www.example.jp</span> を開いた。会社では、外のサイトへはプロキシを通して出る決まりになっている。ページが出るまでの数秒の間に、裏で7つの手順が動いている<div class="legend">www.example.jp と 203.0.113.10 は、説明用に取っておかれた名前とアドレス（実在のサイトではない）</div></dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+<script>
+const svg=document.getElementById('map'),NS='http://www.w3.org/2000/svg';
+function el(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);(p||svg).appendChild(e);return e}
+const N={pc:[62,170,'A さんの PC','pc',26],l2:[142,170,'L2 スイッチ','sw',31],l3:[226,170,'L3 スイッチ','sw',31],dhcp:[226,92,'DHCP サーバ','srv',27],fw:[318,170,'FW（NAT）','fw',30],net:[432,166,'インターネット','net',38],adns:[594,110,'権威 DNS','srv',27],web:[594,290,'取引先の Web サーバ','srv',27],px:[283,318,'プロキシ','srv',27],dns:[380,318,'キャッシュ DNS','srv',27]};
+const E=[['pc','l2'],['l2','l3'],['l3','dhcp'],['l3','fw'],['fw','px'],['fw','dns'],['px','dns'],['fw','net'],['net','adns'],['net','web']];
+const WHO={pc:['A さんの PC','#EEEDFE','#3C3489'],px:['プロキシ','#FAEEDA','#633806']};
+const RT=[['pc','が DHCP サーバから、IP アドレス・ゲートウェイ・DNS サーバをもらう',[['DHCP','L7']]],['pc','がゲートウェイ（L3 スイッチ）の MAC アドレスを引く',[['ARP','L2']]],['pc','がプロキシと接続をつくる',[['TCP','L4']]],['pc','がプロキシに、取引先のサイトへの中継を頼む',[['HTTP CONNECT','L7']]],['px','がキャッシュ DNS に名前を引いてもらう。キャッシュ DNS が権威 DNS に聞く',[['DNS','L7']]],['px','が FW を通って、取引先の Web サーバと接続をつくる。FW が送信元を書き換える',[['TCP','L4'],['NAT','L3']]],['pc','が取引先の Web サーバと暗号の通り道をつくり、ページを頼む',[['TLS','L5〜6 相当'],['HTTPS','L7']]]];
+const C={'S07-2':['DHCP','任意','IPアドレスやDNSの設定を配る仕組み。偽のDHCPサーバは設定を差し替えられる'],'S07-3':['IPアドレスの範囲と特殊な通信','推奨','CIDRで範囲を読む。ブロードキャストはルータを越えない'],'S07-1':['ARPとARPスプーフィング','推奨','ARPはIPアドレスからMACアドレスを引く。偽の応答で通信を横取りできる'],'S05-2':['プロキシとURLフィルタリング','推奨','外への通信をプロキシ経由にして、利用者の認証・URLの許可と拒否・記録をそこでする'],'S05-1':['FWのルールの読み方','推奨','送信元・宛先・ポート・動作を上から順に見て、最初に一致した行で決まる'],'S01-1':['DNSの役割分担（権威DNS・リゾルバ）','推奨','権威DNSは自分のゾーンの答えを持つ。リゾルバは端末の代わりに外へ問い合わせて答えを覚えておく'],'S01-2':['DNSのレコードとFQDN','推奨','A＝名前→IPアドレス、MX＝メールを受けるサーバ、TXT＝SPFなどの文字列'],'S01-3':['DNSへの攻撃（参照先の改ざん・偽の応答）','推奨','参照するDNSや応答を偽れば、利用者は正しい名前のまま偽のサーバへ誘導される'],'S05-4':['NATとUPnP','推奨','NATの後ろでは送信元のIPが変わる。UPnPは機器が自分でポートを開ける'],'S03-1':['サーバ証明書の検証（名前・チェーン・信頼）','必須','接続先のFQDNが証明書の名前（subjectAltName）にあるか、信頼するルートまでたどれるか、期限内かを確かめる'],'S03-4':['HSTS','推奨','一度HTTPSで来たブラウザに『次から必ずHTTPSで』と覚えさせる'],'S03-5':['TLSの設定と復号検査','推奨','使う版・暗号の選び方と、途中でTLSを開いて検査する装置の仕組み']};
+const MV='MAC アドレスを見て転送するだけ。IP アドレスやその先の中身は見ない。';
+const S=[
+{t:'① DHCP',star:['l3','ブロードキャストはルータを越えない（S07-3）'],o:'A さんが PC の電源を入れて LAN につながると、まず DHCP で自分の IP アドレス・ゲートウェイ・参照する DNS サーバをもらう。',legs:[[['pc','l2','l3','dhcp'],'DHCP 要求','IP アドレスをもらいに行く中','DHCP サーバ','DHCP DISCOVER（ブロードキャスト、UDP 67番宛て）','まだ IP アドレスが無いので、同じセグメントの全員に聞こえるように呼びかける。L3 スイッチがリレーして DHCP サーバに届ける'],[['dhcp','l3','l2','pc'],'IP・GW・DNS を配る','設定を受け取る中','A さんの PC','DHCP OFFER → REQUEST → ACK（UDP 68番宛て）','IP アドレス・ゲートウェイ・DNS サーバの3点セットが届いた']],r:{pc:'まだ IP アドレスが無いので、DISCOVER をブロードキャストする。OFFER・REQUEST・ACK の順で、使うアドレスが決まる。',l2:'ブロードキャストを、同じセグメントの全部のポートに流す。'+MV,l3:'ブロードキャストはルータを越えないので、DHCP リレーとして DHCP サーバへ中継する。',dhcp:'配るアドレスを選び、IP アドレス・サブネットマスク・ゲートウェイ・DNS サーバを返す。偽の DHCP サーバがいると、ここを差し替えられる。'},c:['S07-2','S07-3']},
+{t:'② ARP',star:['pc','ARP テーブルが書き換わるのは PC の側（S07-1）'],o:'A さんがお気に入りを押した。プロキシは別のセグメントにあるので、PC はまずゲートウェイ（L3 スイッチ）の MAC アドレスを ARP で引く。',legs:[[['pc','l2','l3'],'GW の MAC は？','ゲートウェイの MAC アドレスを探し中','L3 スイッチ（ゲートウェイ）','ARP 要求（ブロードキャスト）','「この IP アドレスの人、MAC アドレスを教えて」と、同じセグメントの全員に聞く'],[['l3','l2','pc'],'MAC はこれ','MAC アドレスを受け取る中','A さんの PC','ARP 応答（ユニキャスト）','ARP テーブルに書き込んで、しばらく覚えておく。応答が本物かは確かめない']],r:{pc:'「ゲートウェイの IP の MAC は？」をブロードキャストし、返ってきた MAC を ARP テーブルに覚える。偽の応答でも信じてしまう。',l2:'ARP の要求を全部のポートに流す。応答が本物かどうかは確かめない。',l3:'自分の MAC アドレスを返す。偽の応答を送る機器がいると、PC の ARP テーブルが書き換わる（ARP スプーフィング）。'},c:['S07-1']},
+{t:'③ TCP',star:['fw','LAN から DMZ への通信を FW のルールで通す（S05-1）'],o:'ブラウザがプロキシと TCP の接続をつくる。SYN → SYN+ACK → ACK の3回のやりとりで、接続ができる。',legs:[[['pc','l2','l3','fw','px'],'SYN','TCP の接続をつくり中','プロキシ（例：8080番）','TCP SYN','「つないでいい？」と最初の合図を送る'],[['px','fw','l3','l2','pc'],'SYN+ACK','返事を受け取る中','A さんの PC','TCP SYN+ACK','「いいよ。そっちもいい？」'],[['pc','l2','l3','fw','px'],'ACK','最後の合図を送る中','プロキシ','TCP ACK','「OK」。これで接続ができた（3ウェイハンドシェイク）']],r:{pc:'SYN を送り、SYN+ACK を受けて、ACK を返す。',l2:MV,l3:'宛先の IP アドレスを見て、FW の方へ転送する。',fw:'LAN から DMZ のプロキシへの通信を、ルールで許可しているので通す。送信元は PC の IP アドレスのまま。',px:'SYN を受けて SYN+ACK を返す。ACK が来たら接続ができる。'},c:['S05-1','S05-2']},
+{t:'④ CONNECT',star:['pc','名前を引くのは PC ではない（S05-2）'],o:'ブラウザはプロキシに「CONNECT www.example.jp:443」と頼む。プロキシは A さんを認証し、宛先を URL フィルタと照らして記録する。',legs:[[['pc','l2','l3','fw','px'],'CONNECT www.example.jp:443','プロキシにお願い中','プロキシ','HTTP CONNECT www.example.jp:443','「www.example.jp の 443番へ、つないでほしい」'],[['px','fw','l3','l2','pc'],'407 認証して','身元を聞かれ中','A さんの PC','HTTP 407 Proxy Authentication Required','「あなたは誰？」と聞き返される'],[['pc','l2','l3','fw','px'],'CONNECT（ID 付き）','ID を付けてもう一度お願い中','プロキシ','CONNECT ＋ Proxy-Authorization ヘッダ','A さんの ID を見せて、記録と URL フィルタのチェックを通る']],r:{pc:'宛先の名前とポートだけをプロキシに伝える。名前から IP アドレスを引くのは、PC ではない。',l2:MV,l3:'宛先の IP アドレスを見て転送するだけ。',fw:'許可した通信なので通す。パケットフィルタが見るのは、IP アドレスとポートまで。',px:'407 を返して利用者を認証する（Proxy-Authorization）。宛先の名前を許可・拒否のリストと照らし、利用者・宛先・時刻を記録する。'},c:['S05-2']},
+{t:'⑤ DNS',star:['dns','誰が何を引いたかの記録が残る（S01-1）'],o:'名前を引くのは PC ではなくプロキシ。キャッシュ DNS（フルサービスリゾルバ）が、外の権威 DNS に聞いて答えを持ち帰る。',legs:[[['px','dns'],'A は？','名前を引いてもらう中','キャッシュ DNS','DNS 再帰的クエリ（UDP 53番）','「www.example.jp の A レコードは？」'],[['dns','fw','net','adns'],'A は？','外へ聞きに行く中','権威 DNS（example.jp）','DNS 非再帰的クエリ（UDP 53番）','キャッシュに無いので、ルート → jp → example.jp と順にたどる（図は最後の1回だけ）'],[['adns','net','fw','dns'],'203.0.113.10','答えを持ち帰る中','キャッシュ DNS','DNS 応答（A レコード・TTL）','「203.0.113.10 だよ」。TTL の秒数のあいだ覚えておく'],[['dns','px'],'203.0.113.10','答えを渡す中','プロキシ','DNS 応答','これで行き先の IP アドレスが分かった']],r:{px:'キャッシュ DNS に「www.example.jp の A レコードは？」と再帰的クエリを送る。',dns:'キャッシュに無ければ、ルート → jp → example.jp の権威 DNS の順に聞いて、答えを TTL の間覚える。誰が何を引いたかの記録が残る。',fw:'DMZ のキャッシュ DNS から外への DNS（53番）を許可しているので通す。送信元はグローバル IP アドレスに書き換える（NAT）。',net:'経路の途中。DNS はふつう暗号化されていないので、経路の上で中身を見られうる。',adns:'自分のゾーンの A レコードを返す。見える送信元は、FW のグローバル IP アドレス。'},c:['S01-1','S01-2','S01-3']},
+{t:'⑥ NAT',star:['web','見える送信元は FW のグローバル IP アドレス（S05-4）'],o:'プロキシが取引先の Web サーバと TCP の接続をつくり、できたら PC に「200 Connection established」を返す。FW は、送信元を自分のグローバル IP アドレスに書き換える（NAT）。',legs:[[['px','fw','net','web'],'SYN','Web サーバとつなぎ中','取引先の Web サーバ（443番）','TCP SYN（FW が送信元を NAT で書き換え）','FW を出るとき、送信元がグローバル IP アドレスに変わる'],[['web','net','fw','px'],'SYN+ACK','返事を受け取る中','プロキシ','TCP SYN+ACK','FW は覚えておいた対応表で、戻りをプロキシへ返す'],[['px','fw','net','web'],'ACK','最後の合図を送る中','取引先の Web サーバ','TCP ACK','接続ができた'],[['px','fw','l3','l2','pc'],'200 つないだ','トンネル開通を知らせ中','A さんの PC','HTTP 200 Connection established','ここからプロキシは、中身を見ずに中継するだけ']],r:{px:'Web サーバと TCP の接続をつくり、PC に 200 を返す。ここからは中身を見ずに中継する（トンネル）。',fw:'ルールを上から照らし、プロキシから外への 443番を許可。送信元をグローバル IP アドレスに書き換え、戻りの応答を元に戻す。',net:'経路の途中。',web:'見える接続元は、FW のグローバル IP アドレスだけ。A さんの PC やプロキシのアドレスは見えない。',pc:'プロキシから 200 が届いたら、トンネルができたと分かる。',l2:MV,l3:'宛先の IP アドレスを見て転送するだけ。'},c:['S05-1','S05-4']},
+{t:'⑦ TLS',star:['px','復号しないプロキシに見えるのは、名前・時刻・量だけ（S05-2。記述練習 A9）'],o:'トンネルの中で、A さんの PC と取引先の Web サーバが直接 TLS を結ぶ。PC が証明書を確かめてから、暗号化した HTTP の要求を送る。',legs:[[['pc','l2','l3','fw','px','fw','net','web'],'ClientHello','暗号の通り道を作り中','取引先の Web サーバ','TLS ClientHello（SNI＝www.example.jp）','「この名前のサイトと、この暗号で話したい」'],[['web','net','fw','px','fw','l3','l2','pc'],'証明書','証明書を受け取り中','A さんの PC','TLS ServerHello・Certificate','PC が SAN・信頼するルートまでのチェーン・期限を確かめる。だめなら止める'],[['pc','l2','l3','fw','px','fw','net','web'],'GET /（暗号）','ページを頼み中','取引先の Web サーバ','HTTPS（HTTP GET / を TLS で暗号化）','中身は暗号文。途中の機器には読めない。返ってきたページが A さんのブラウザに出て、ゴール']],r:{pc:'SNI に www.example.jp を入れて ClientHello を送る。届いた証明書の SAN と接続先の FQDN、信頼するルートまでのチェーン、期限を確かめ、合格なら要求を暗号化して送る。',l2:MV,l3:'宛先の IP アドレスを見て転送するだけ。',fw:'見えるのは IP アドレスとポート（443）だけ。中身は暗号文。',px:'見えるのは、CONNECT で聞いた名前・時刻・通信の量だけ。URL のパスや中身は見えない（復号検査をしない限り）。',net:'経路の途中。中身は暗号文。',web:'証明書と秘密鍵で TLS を結び、要求に答える。Host ヘッダで、どのサイトへの要求かを決める。'},c:['S03-1','S03-4','S03-5']}];
+const INK='#2C2C2A',BLUSH='#ED93B1';
+function txt(x,y,t,fill,anchor,p){const e=el('text',{x,y,'font-size':12,fill,'text-anchor':anchor||'start'},p);e.textContent=t;return e}
+function zone(x,y,w,h,fill,label,lc){el('rect',{x,y,width:w,height:h,rx:22,fill});if(label)txt(x+14,y+20,label,lc)}
+zone(16,30,262,220,'#EEEDFE','社内 LAN','#3C3489');zone(228,258,206,110,'#FAEEDA','DMZ','#633806');zone(376,104,112,128,'#E6F1FB','','');zone(516,30,156,338,'#E1F5EE','社外のサーバ','#085041');
+const eg=el('g',{});
+E.forEach(([a,b])=>{const [x1,y1,,,r1]=N[a],[x2,y2,,,r2]=N[b];const d=Math.hypot(x2-x1,y2-y1),ux=(x2-x1)/d,uy=(y2-y1)/d;el('line',{x1:x1+ux*r1,y1:y1+uy*r1,x2:x2-ux*r2,y2:y2-uy*r2,class:'edge',id:'e-'+a+'-'+b},eg)});
+const ring=el('rect',{fill:'none',stroke:'#EF9F27','stroke-width':1.8,'stroke-dasharray':'5 4',rx:14,style:'display:none'});
+function face(g,id,cx,cy,sc){el('ellipse',{cx:cx-11*sc,cy:cy+5*sc,rx:3.4*sc,ry:2.1*sc,fill:BLUSH,opacity:.8},g);el('ellipse',{cx:cx+11*sc,cy:cy+5*sc,rx:3.4*sc,ry:2.1*sc,fill:BLUSH,opacity:.8},g);const o=el('g',{id:'fo-'+id},g);el('circle',{cx:cx-6*sc,cy:cy,r:2.3*sc,fill:INK},o);el('circle',{cx:cx+6*sc,cy:cy,r:2.3*sc,fill:INK},o);el('circle',{cx:cx-5.2*sc,cy:cy-.8*sc,r:.7*sc,fill:'#FFFFFF'},o);el('circle',{cx:cx+6.8*sc,cy:cy-.8*sc,r:.7*sc,fill:'#FFFFFF'},o);el('path',{d:`M${cx-3*sc} ${cy+5*sc} Q${cx} ${cy+9*sc} ${cx+3*sc} ${cy+5*sc}`,fill:'none',stroke:INK,'stroke-width':1.3*sc,'stroke-linecap':'round'},o);const c=el('g',{id:'fc-'+id,style:'display:none'},g);[-6,6].forEach(dx=>el('path',{d:`M${cx+dx*sc-3*sc} ${cy} Q${cx+dx*sc} ${cy+2.6*sc} ${cx+dx*sc+3*sc} ${cy}`,fill:'none',stroke:INK,'stroke-width':1.3*sc,'stroke-linecap':'round'},c));el('line',{x1:cx-2*sc,y1:cy+6*sc,x2:cx+2*sc,y2:cy+6*sc,stroke:INK,'stroke-width':1.2*sc,'stroke-linecap':'round'},c)}
+function label(g,x,y,t){txt(x,y,t,'#444441','middle',g)}
+Object.entries(N).forEach(([k,[x,y,nm,ty]])=>{const g=el('g',{class:'nd',id:'n-'+k});g.addEventListener('click',()=>{if(involved().has(k)){setMode(2);setView(k)}});
+if(ty==='pc'){el('rect',{x:x-24,y:y-21,width:48,height:34,rx:9,fill:'#CECBF6',stroke:'#7F77DD','stroke-width':1},g);el('rect',{x:x-19,y:y-16,width:38,height:24,rx:5,fill:'#FFFFFF'},g);el('rect',{x:x-6,y:y+13,width:12,height:7,rx:3,fill:'#AFA9EC'},g);el('rect',{x:x-15,y:y+19,width:30,height:5,rx:2.5,fill:'#AFA9EC'},g);face(g,k,x,y-6,.8);label(g,x,y+40,nm)}
+else if(ty==='sw'){const h=k==='l3'?32:26;el('rect',{x:x-31,y:y-h/2,width:62,height:h,rx:12,fill:'#F1EFE8',stroke:'#888780','stroke-width':1},g);[-16,-9,-2,5].forEach(dx=>el('rect',{x:x+dx,y:y+h/2-8,width:5,height:4,rx:1.5,fill:'#B4B2A9'},g));el('circle',{cx:x+21,cy:y-h/2+8,r:2.2,fill:'#5DCAA5'},g);if(k==='l3')el('rect',{x:x-24,y:y-h/2-5,width:48,height:7,rx:3.5,fill:'#D3D1C7'},g);face(g,k,x-3,y-3,.72);label(g,x,y+36,nm)}
+else if(ty==='srv'){el('rect',{x:x-19,y:y-25,width:38,height:50,rx:12,fill:'#F1EFE8',stroke:'#888780','stroke-width':1},g);[8,16].forEach(dy=>{el('rect',{x:x-12,y:y+dy-2,width:18,height:4,rx:2,fill:'#D3D1C7'},g);el('circle',{cx:x+10,cy:y+dy,r:2,fill:'#5DCAA5'},g)});face(g,k,x,y-9,.85);const up=k==='dhcp'||k==='adns';label(g,x,up?y-33:y+41,nm)}
+else if(ty==='fw'){el('rect',{x:x-28,y:y-19,width:56,height:38,rx:10,fill:'#F5C4B3',stroke:'#D85A30','stroke-width':1},g);[[-28,-6,28,-6],[-28,7,28,7],[-14,-19,-14,-6],[14,-19,14,-6],[-22,7,-22,19],[22,7,22,19]].forEach(([a,b,c2,d])=>el('line',{x1:x+a,y1:y+b,x2:x+c2,y2:y+d,stroke:'#D85A30','stroke-width':.8,opacity:.45},g));el('rect',{x:x-15,y:y-9,width:30,height:20,rx:8,fill:'#FAECE7'},g);face(g,k,x,y-1,.72);label(g,x,y-27,nm)}
+else{[[x-16,y-4,16],[x+6,y-11,19],[x+22,y+1,14]].forEach(([cx,cy,r])=>el('circle',{cx,cy,r,fill:'#FFFFFF'},g));el('rect',{x:x-32,y:y-4,width:68,height:22,rx:11,fill:'#FFFFFF'},g);face(g,k,x+3,y+1,.82);label(g,x,y+44,nm)}});
+const pk=el('g',{style:'display:none'});el('rect',{x:-9,y:-9,width:18,height:18,rx:5,fill:'#FFE38A',stroke:'#BA7517','stroke-width':1},pk);el('circle',{cx:-3,cy:-1,r:1.5,fill:INK},pk);el('circle',{cx:3,cy:-1,r:1.5,fill:INK},pk);el('path',{d:'M-2 3 Q0 5 2 3',fill:'none',stroke:INK,'stroke-width':1,'stroke-linecap':'round'},pk);
+const cap=el('g',{style:'display:none'});const capR=el('rect',{height:22,rx:11,fill:'#FAEEDA',stroke:'#BA7517','stroke-width':0.6},cap);const capT=el('text',{'font-size':12,fill:'#633806','text-anchor':'middle','dominant-baseline':'central'},cap);
+let si=0,view='all',tok=0,mode=1,cur=0;const $=id=>document.getElementById(id);
+$('route').innerHTML=RT.map(([w,rest,prs],i)=>'<div class="rr" id="rt-'+i+'"><span>'+S[i].t.slice(0,1)+'</span><span class="who" style="background:'+WHO[w][1]+';color:'+WHO[w][2]+'">'+WHO[w][0]+'</span><span>'+rest+'</span><span class="pr">'+prs.map(([p,l])=>'<span class="pn">'+p+'</span><span class="ly">'+l+'</span>').join('<span style="width:6px"></span>')+'</span></div>').join('');
+[[1,'1周目 流れを見る'],[2,'2周目 立場で見る']].forEach(([m,t])=>{const b=document.createElement('button');b.dataset.m=m;b.textContent=t;b.onclick=()=>{setMode(m);if(m===1){setView('all');setStep(si)}};$('modes').appendChild(b)});
+S.forEach((s,i)=>{const b=document.createElement('button');b.textContent=s.t;b.onclick=()=>setStep(i);$('steps').appendChild(b)});
+$('prev').onclick=()=>setStep(si-1);$('next').onclick=()=>setStep(si+1);$('again').onclick=()=>play();$('go2').onclick=()=>{setMode(2);setStep(0)};
+function involved(i){const s=new Set();S[i===undefined?si:i].legs.forEach(l=>l[0].forEach(n=>s.add(n)));return s}
+function setMode(m){mode=m;[...$('modes').children].forEach(b=>b.classList.toggle('on',+b.dataset.m===m));$('viewrow').style.display=m===2?'flex':'none';$('end').style.display='none';views()}
+function views(){const box=$('views');box.innerHTML='';const st=S[si].star[0];[['all','全体']].concat([...involved()].map(k=>[k,(k===st?'★ ':'')+N[k][2]])).forEach(([k,n])=>{const b=document.createElement('button');if(k===view)b.className='on';b.textContent=n;b.onclick=()=>setView(k);box.appendChild(b)})}
+function states(){const inv=involved();Object.keys(N).forEach(k=>{const on=inv.has(k);$('n-'+k).classList.toggle('dim',!on&&k!==view);$('fo-'+k).style.display=on?'':'none';$('fc-'+k).style.display=on?'none':''})}
+function mk(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p.appendChild(e);return e}
+function avatar(){const a=$('av');a.innerHTML='';const ty=N[view][3];const col={pc:'#CECBF6',sw:'#F1EFE8',srv:'#F1EFE8',fw:'#F5C4B3',net:'#FFFFFF'}[ty];mk('circle',{cx:20,cy:20,r:18,fill:col,stroke:'#B4B2A9','stroke-width':1},a);[[14,18],[26,18]].forEach(([x,y])=>mk('circle',{cx:x,cy:y,r:2.4,fill:INK},a));[[9,24],[31,24]].forEach(([x,y])=>mk('ellipse',{cx:x,cy:y,rx:3.4,ry:2,fill:BLUSH,opacity:.8},a));mk('path',{d:'M17 25 Q20 28 23 25',fill:'none',stroke:INK,'stroke-width':1.4,'stroke-linecap':'round'},a)}
+function esc(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;')}
+function render(){const s=S[si],box=$('box'),h=$('bx-h'),b=$('bx-b');if(view==='all'){const l=s.legs[cur];box.style.background='var(--warn-bg)';$('mic').style.display='';$('mic').style.color='var(--warn)';$('av').style.display='none';h.style.color='var(--warn)';h.textContent='実況｜'+s.t+'（'+(cur+1)+'／'+s.legs.length+'）';b.innerHTML='<div style="font-size:14px">'+esc(s.o)+'</div><dl class="jk"><dt>いま</dt><dd>'+esc(l[2])+'</dd><dt>目指す先</dt><dd>'+esc(l[3])+'</dd><dt>使うコード</dt><dd style="font-family:var(--mono);font-size:13px">'+esc(l[4])+'</dd><dt>ひとこと</dt><dd>'+esc(l[5])+'</dd></dl>'}else{box.style.background='var(--soft)';$('mic').style.display='none';$('av').style.display='';avatar();h.style.color='var(--sub)';h.textContent=N[view][2]+' の立場から｜'+s.t;const st=s.star[0]===view?'<div style="margin-top:6px;font-size:13px;color:var(--accent)">★ この手順で聞かれやすい立場：'+esc(s.star[1])+'</div>':'';b.innerHTML='<div style="font-size:15px;line-height:1.7">'+esc(s.r[view])+'</div>'+st}}
+function setStep(i){si=(i+S.length)%S.length;cur=0;$('end').style.display='none';if(view!=='all'&&!involved().has(view))view='all';[...$('steps').children].forEach((b,j)=>b.classList.toggle('on',j===si));RT.forEach((_,j)=>$('rt-'+j).classList.toggle('on',j===si));const hot=new Set();S[si].legs.forEach(l=>{for(let j=0;j<l[0].length-1;j++){hot.add(l[0][j]+'-'+l[0][j+1]);hot.add(l[0][j+1]+'-'+l[0][j])}});E.forEach(([a,b])=>$('e-'+a+'-'+b).classList.toggle('hot',hot.has(a+'-'+b)));ringAt();states();views();render();cards();play()}
+function ringAt(){if(view==='all'){ring.style.display='none';return}const [x,y,,ty]=N[view];const w=ty==='net'?92:ty==='sw'?78:ty==='fw'?72:ty==='pc'?64:54,h=ty==='srv'?66:ty==='pc'?58:ty==='net'?56:ty==='fw'?52:46;ring.setAttribute('x',x-w/2);ring.setAttribute('y',y-h/2-(ty==='pc'?2:0));ring.setAttribute('width',w);ring.setAttribute('height',h);ring.style.display=''}
+function setView(k){view=k;ringAt();states();views();render()}
+function cards(){const box=$('cards');box.innerHTML='';S[si].c.forEach(id=>{const [nm,pr,core]=C[id];const bg=pr==='必須'?'var(--danger-bg)':pr==='推奨'?'var(--warn-bg)':'var(--soft)';const fg=pr==='必須'?'var(--danger)':pr==='推奨'?'var(--warn)':'var(--sub)';const d=document.createElement('div');d.className='cd';d.innerHTML='<div style="font-size:12px;color:var(--sub);margin-bottom:4px"><span class="badge" style="background:'+bg+';color:'+fg+'">'+pr+'</span>'+id+'</div><div style="font-size:14px;font-weight:500;margin-bottom:4px">'+nm+'</div><div style="font-size:13px;color:var(--sub)">'+core+'</div>';box.appendChild(d)})}
+function wlen(t){let w=0;for(const ch of t)w+=ch.charCodeAt(0)<128?7:12;return w+18}
+function place(x,y,lb){pk.setAttribute('transform','translate('+x.toFixed(1)+','+y.toFixed(1)+')');const w=wlen(lb);const lx=Math.min(Math.max(x,w/2+4),676-w/2),ly=y<70?y+28:y-28;capR.setAttribute('x',lx-w/2);capR.setAttribute('y',ly-11);capR.setAttribute('width',w);capT.setAttribute('x',lx);capT.setAttribute('y',ly);capT.textContent=lb}
+function play(){const my=++tok;const legs=S[si].legs;pk.style.display='';cap.style.display='';if(matchMedia('(prefers-reduced-motion: reduce)').matches){cur=legs.length-1;const l=legs[cur],p=N[l[0][l[0].length-1]];place(p[0],p[1],l[1]);render();return}let li=0;function leg(){if(my!==tok)return;if(li>=legs.length){if(mode===1){if(si<S.length-1)setTimeout(()=>{if(my===tok)setStep(si+1)},1800);else $('end').style.display='block'}return}const [path,lb]=legs[li];cur=li;render();const P=path.map(k=>[N[k][0],N[k][1]]);const seg=[];let L=0;for(let j=0;j<P.length-1;j++){const d=Math.hypot(P[j+1][0]-P[j][0],P[j+1][1]-P[j][1]);seg.push(d);L+=d}const sp=+$('spd').value;const dur=Math.max(1400,L/sp*1000);place(P[0][0],P[0][1],lb);setTimeout(()=>{if(my!==tok)return;const t1=performance.now();function f(now){if(my!==tok)return;let p=Math.min(1,(now-t1)/dur)*L,j=0;while(j<seg.length-1&&p>seg[j]){p-=seg[j];j++}const q=seg[j]?p/seg[j]:1;place(P[j][0]+(P[j+1][0]-P[j][0])*q,P[j][1]+(P[j+1][1]-P[j][1])*q,lb);if(now-t1<dur)requestAnimationFrame(f);else{li++;setTimeout(leg,1100)}}requestAnimationFrame(f)},700)}leg()}
+setMode(1);setStep(0);
+</script>
+</body>
+</html>
