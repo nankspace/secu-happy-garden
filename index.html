@@ -881,25 +881,31 @@ function initFigs(root){
       });
       return ok?o:null  // 測れなかったら、次に見えたときに測り直す
     }
-    function put(x,y,lb){
-      ball.setAttribute('transform','translate('+x.toFixed(1)+','+y.toFixed(1)+')');
-      // 札はまず玉の上に出す（名前を上に書いた機器の近くでは下）。字・札・ほかの機器にかかるなら、反対側・真横・斜め・少し遠くの順に空いている所を探す
-      const near=Object.values(f.nodes).find(n=>Math.hypot(n.x-x,n.y-y)<44);
-      const w=wlen(lb),up=y<70||(near&&near.lp==='above'),d0=up?30:-28,d1=up?-28:30,sx=w/2+18,sl=w/2+(near?RAD[near.type]+6:20);
-      const obs=(fixedObs||[]).filter(o=>o.n!==near).concat(stepObs);
+    // 区間の札を、封筒から見てどこに出すか（[横, 縦] のずれ）を、区間の行き先 B に止まったときの位置で選ぶ。
+    // まず上（名前を上に書いた機器や図の上の端では下）。字・札・ほかの機器にかかるなら、反対側・真横・斜め・少し遠くの順に空いている所を探す。
+    // 選ぶのは、同じ字の札が続く区間のまとまりの初めの1回だけ（下の fr）。動くたびに選び直すと、札が上・下・横と行ったり来たりする
+    // （2026-11-15 に本人「行ったり来たり動くの気になる」）
+    function pick(B,lb){
+      const w=wlen(lb),up=B.y<70||B.lp==='above',d0=up?30:-28,d1=up?-28:30,sx=w/2+18,sl=w/2+RAD[B.type]+6;
+      const obs=(fixedObs||[]).filter(o=>o.n!==B).concat(stepObs);
       const cand=[[0,d0],[0,d1],[-sl,0],[sl,0],[-sx,d0],[sx,d0],[-sx,d1],[sx,d1],[0,d0*1.9],[0,d1*1.9],[-sx,d0*1.9],[sx,d0*1.9],[-sx,d1*1.9],[sx,d1*1.9]];
       let best=null;
       for(const [dx,dy] of cand){
-        const cx=Math.min(Math.max(x+dx,w/2+4),676-w/2),cy=y+dy,r=[cx-w/2,cy-11,cx+w/2,cy+11];
+        const cx=Math.min(Math.max(B.x+dx,w/2+4),676-w/2),cy=B.y+dy,r=[cx-w/2,cy-11,cx+w/2,cy+11];
         let sc=r[1]<0||r[3]>VH?1e6:0;
         obs.forEach(o=>{
           const a=Math.min(r[2],o.r[2])-Math.max(r[0],o.r[0]),b=Math.min(r[3],o.r[3])-Math.max(r[1],o.r[1]);
           if(a>0&&b>0)sc+=a*b
         });
-        if(!best||sc<best.sc)best={sc,cx,cy};
+        if(!best||sc<best.sc)best={sc,dx,dy};
         if(!sc)break
       }
-      const lx=best.cx,ly=best.cy;
+      return [best.dx,best.dy]
+    }
+    function put(x,y,lb,d){
+      ball.setAttribute('transform','translate('+x.toFixed(1)+','+y.toFixed(1)+')');
+      // 札は、選んだずれ d のまま封筒について動く。図の端では、はみ出さないように寄せる
+      const w=wlen(lb),lx=Math.min(Math.max(x+d[0],w/2+4),676-w/2),ly=Math.min(Math.max(y+d[1],13),VH-13);
       cr.setAttribute('x',lx-w/2);
       cr.setAttribute('y',ly-11);
       cr.setAttribute('width',w);
@@ -976,16 +982,23 @@ function initFigs(root){
       cp.style.display='';
       const legs=s.legs.map(([a,b])=>[f.nodes[a],f.nodes[b]]);
       if(matchMedia('(prefers-reduced-motion: reduce)').matches){
-        const B=legs[legs.length-1][1];
-        put(B.x,B.y,s.cap[legs.length-1]);
+        const B=legs[legs.length-1][1],lb=s.cap[legs.length-1];
+        put(B.x,B.y,lb,pick(B,lb));
         return
       }
-      let li=0,t0=0;
+      let li=0,t0=0,lo=null;  // lo：札のずれ。同じ字の札が続く区間のまとまりごとに、まとまりの最後の行き先で1回だけ選ぶ（境目でも跳ばない）
       function fr(ts){
         if(my!==tk||!live())return;
-        if(!t0)t0=ts;
+        if(!t0){
+          t0=ts;
+          if(!li||s.cap[li]!==s.cap[li-1]){
+            let j=li;
+            while(j+1<legs.length&&s.cap[j+1]===s.cap[li])j++;
+            lo=pick(legs[j][1],s.cap[li])
+          }
+        }
         const [A,B]=legs[li],dur=Math.max(1400,Math.hypot(B.x-A.x,B.y-A.y)/130*1000),q=Math.min(1,(ts-t0)/dur);
-        put(A.x+(B.x-A.x)*q,A.y+(B.y-A.y)*q,s.cap[li]);
+        put(A.x+(B.x-A.x)*q,A.y+(B.y-A.y)*q,s.cap[li],lo);
         if(q<1)return requestAnimationFrame(fr);
         li++;
         t0=0;
