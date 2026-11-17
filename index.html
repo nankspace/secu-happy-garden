@@ -181,7 +181,11 @@ button.shh:hover,button.shh:focus-visible{color:var(--accent);border-color:var(-
 .lkln>code{background:none;border:0;padding:0;font-size:12.5px;overflow-wrap:anywhere}
 @media (max-width:600px){.lkln{grid-template-columns:minmax(0,1fr)}}
 @media (prefers-color-scheme:dark){.lkenv{background:#4B1528;border-color:#ED93B1}.lkenv>.lkcap{color:#F4C0D1}}
-/* みんなのおうち（2026-11-17）：ガーデンの下の家の札と、家を押すと移る1ページ */
+/* みんなのおうち（2026-11-17）：ガーデンの区画のタブ、家の札、家を押すと移る1ページ */
+.gtabs{display:flex;flex-wrap:wrap;gap:6px;margin:2px 4px 8px}
+.gtabs small{font-size:inherit}
+@media (max-width:600px){.gtabs small{display:none}}
+#houses{padding:0 4px 6px}
 .hgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
 .house{display:block;text-decoration:none;color:var(--text);border:1px solid var(--line);border-radius:14px;padding:8px 10px 10px;background:var(--soft);text-align:center}
 .house:hover,.house:focus-visible{border-color:#D4537E;outline:none;box-shadow:0 0 0 2px #ED93B1}
@@ -199,9 +203,9 @@ button.shh:hover,button.shh:focus-visible{color:var(--accent);border-color:var(-
 <body>
 <div class="wrap">
 <div class="brand"><button id="mbtn" class="hb" aria-label="場面の一覧を開く" aria-expanded="false" aria-controls="menu">☰</button><a href="#home">セキュのハッピーガーデン</a><small>科目B 構造の基礎入れ｜経路を見てみよう</small></div>
-<div id="scrim" class="scrim"></div><nav id="menu" class="menu" aria-label="場面の一覧"><div class="mh"><span>場面の一覧</span><button id="mclose" aria-label="一覧を閉じる">✕ 閉じる</button></div><a id="mhome" class="mi top" href="#home">🌱 ガーデン（はじめの画面）</a><a id="mcards" class="mi top" href="#cards">📇 カード一覧（問題つき）</a><div id="mtree"></div></nav>
+<div id="scrim" class="scrim"></div><nav id="menu" class="menu" aria-label="場面の一覧"><div class="mh"><span>場面の一覧</span><button id="mclose" aria-label="一覧を閉じる">✕ 閉じる</button></div><a id="mhome" class="mi top" href="#home">🌱 ガーデン（はじめの画面）</a><a id="mcards" class="mi top" href="#cards">📇 カード一覧（問題つき）</a><a id="mouchi" class="mi top" href="#ouchi">🏠 みんなのおうち</a><div id="mtree"></div></nav>
 <div id="cvscrim" class="scrim cvs"></div><div id="cv" class="cv" role="dialog" aria-modal="true" aria-labelledby="cv-title" hidden><div class="cvh"><div><div id="cv-sub" class="cv-sub"></div><div id="cv-title" class="cv-title"></div></div><button id="cvclose" aria-label="カードを閉じる">✕ 閉じる</button></div><div id="cv-body"></div></div>
-<div id="home" style="display:none"><div class="card" id="basics" style="margin-bottom:12px"></div><div class="card" style="padding:8px 8px 4px"><svg id="garden" width="100%" viewBox="0 0 900 520" role="img" aria-label="ガーデン：まとまりを選ぶ"></svg><div style="font-size:13px;color:var(--sub);padding:2px 8px 6px">キャラか吹き出しをタップすると、そのまとまりの場面へ行けます。左上の ☰ を押すと、全部の場面を「まとまり → 場面」の一覧から選べます。場面の画面からガーデンへ戻るときは、左上の「セキュのハッピーガーデン」か「← ガーデンへ」を押します</div></div><div class="card" id="houses" style="margin-top:12px"></div><div class="card" id="cardlist" style="margin-top:12px"><div class="clh"><span id="cl-title">カード一覧</span><span class="row" id="cl-filter" style="margin:0"></span></div><div class="legend" style="margin:0 0 4px">カードを押すと、仕組みの説明（先に読む）と、そのカードで本番に聞かれる形の問題が開きます。答えは「答えを見る」を押すまで隠れています。場面の中の「この手順に関係するカード」からも開けます</div><div id="cl-body"></div></div></div>
+<div id="home" style="display:none"><div class="card" id="basics" style="margin-bottom:12px"></div><div class="card" style="padding:8px 8px 4px"><div class="gtabs" id="gtabs" role="tablist" aria-label="ガーデンとみんなのおうち"><button role="tab" id="tab-garden" aria-controls="pane-garden">🌱 ガーデン<small>（まとまりの流れ）</small></button><button role="tab" id="tab-ouchi" aria-controls="houses">🏠 みんなのおうち<small>（1つの覚えること）</small></button></div><div id="pane-garden" role="tabpanel" aria-labelledby="tab-garden"><svg id="garden" width="100%" viewBox="0 0 900 520" role="img" aria-label="ガーデン：まとまりを選ぶ"></svg><div style="font-size:13px;color:var(--sub);padding:2px 8px 6px">キャラか吹き出しをタップすると、そのまとまりの場面へ行けます。左上の ☰ を押すと、全部の場面を「まとまり → 場面」の一覧から選べます。場面の画面からガーデンへ戻るときは、左上の「セキュのハッピーガーデン」か「← ガーデンへ」を押します</div></div><div id="houses" role="tabpanel" aria-labelledby="tab-ouchi" hidden></div></div><div class="card" id="cardlist" style="margin-top:12px"><div class="clh"><span id="cl-title">カード一覧</span><span class="row" id="cl-filter" style="margin:0"></span></div><div class="legend" style="margin:0 0 4px">カードを押すと、仕組みの説明（先に読む）と、そのカードで本番に聞かれる形の問題が開きます。答えは「答えを見る」を押すまで隠れています。場面の中の「この手順に関係するカード」からも開けます</div><div id="cl-body"></div></div></div>
 <div id="ouchi" style="display:none"></div><div class="sel" id="selwrap"><div class="row" id="groups"></div><div class="row" id="scenes"></div></div>
 <div class="layout" id="layout">
 <div class="left">
@@ -886,13 +890,13 @@ function houseSvg(kind,id){
   if(kind==='mail')mailChan(svg,100,112,id);
   return svg
 }
-// ---- みんなのおうち（ガーデンの下）。家を押すと、1ページの画面（#ouchi-系統）に移る
+// ---- みんなのおうち（ガーデンの区画の「みんなのおうち」のタブの中）。家を押すと、1ページの画面（#ouchi-系統）に移る
 function drawHouses(){
   const box=$('houses'),bs=buddies();
   box.innerHTML='';
-  box.style.display=bs.length?'':'none';
+  $('gtabs').hidden=!bs.length;  // 家が無ければタブを出さず、ガーデンだけにする
   if(!bs.length)return;
-  box.innerHTML='<div class="clh"><span>🏠 みんなのおうち</span></div><div class="legend" style="margin:0 0 8px">ガーデンは、まとまりごとの流れ。'+
+  box.innerHTML='<div class="legend" style="margin:2px 4px 8px">ガーデンは、まとまりごとの流れ。'+
     'おうちには、1つのことを覚えてほしいキャラが住んでいます。おうちを押すと、そのキャラの覚えてほしいことが1ページで開きます</div>';
   const g=document.createElement('div');
   g.className='hgrid';
@@ -938,6 +942,28 @@ function openOuchi(k){
   window.scrollTo({top:0});
   o.querySelector('.obk').focus({preventScroll:true})
 }
+// ガーデンとみんなのおうちのタブ（2026-11-17。本人「せきゅのハッピーガーデンのところでおうちとガーデン切り替えたい」「たぶてきなかんじとか？」）。
+// 選んだ方だけを同じ場所に出す。最初はガーデン。アプリを開いているあいだは、選んだタブを覚える
+let homeTab='garden';
+function setHomeTab(t){
+  if(t==='ouchi'&&$('gtabs').hidden)t='garden';
+  homeTab=t;
+  [['garden','pane-garden'],['ouchi','houses']].forEach(([k,p])=>{
+    const b=$('tab-'+k),on=k===t;
+    b.classList.toggle('on',on);
+    b.setAttribute('aria-selected',on?'true':'false');
+    b.tabIndex=on?0:-1;
+    $(p).hidden=!on
+  })
+}
+$('tab-garden').onclick=()=>setHomeTab('garden');
+$('tab-ouchi').onclick=()=>setHomeTab('ouchi');
+$('gtabs').addEventListener('keydown',e=>{
+  if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight')return;
+  e.preventDefault();
+  setHomeTab(homeTab==='garden'?'ouchi':'garden');
+  $('tab-'+homeTab).focus()
+});
 function showHome(){
   tok++;
   if(paused)setPause(false);
@@ -948,6 +974,7 @@ function showHome(){
   drawBasics();
   drawGarden();
   drawHouses();
+  setHomeTab(homeTab);
   drawCardList();
   window.scrollTo({top:0})
 }
@@ -1498,6 +1525,7 @@ $('mclose').onclick=()=>{
 $('scrim').onclick=closeMenu;
 $('mhome').addEventListener('click',closeMenu);
 $('mcards').addEventListener('click',closeMenu);
+$('mouchi').addEventListener('click',closeMenu);
 document.addEventListener('keydown',e=>{
   if(e.key!=='Escape')return;
   if(!$('cv').hidden){
@@ -1516,11 +1544,19 @@ function route(){
     const back=ouchiBack;
     ouchiBack=null;
     showHome();
+    if(back)setHomeTab('ouchi');
     const h=back&&$('houses').querySelector('.house[data-buddy="'+back+'"]');  // おうちの1ページから戻ったら、その家を画面に入れる
     if(h){
       h.scrollIntoView({block:'center'});
       h.focus({preventScroll:true})
     }
+    return
+  }
+  if(id==='ouchi'){  // ☰ の「みんなのおうち」
+    ouchiBack=null;
+    showHome();
+    setHomeTab('ouchi');
+    $('gtabs').scrollIntoView();
     return
   }
   if(id.startsWith('ouchi-')){
