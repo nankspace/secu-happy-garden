@@ -49,9 +49,6 @@ input[type=range]{accent-color:#378ADD}
 .gd{cursor:pointer;outline:none}
 .gd:hover .bub,.gd:focus-visible .bub{stroke:#378ADD;stroke-width:2.4}
 @media (prefers-reduced-motion:no-preference){.gd{transition:transform .25s}.gd:hover,.gd:focus-visible{transform:translateY(-5px)}}
-.bud{cursor:pointer;outline:none}
-.bud:hover .bub,.bud:focus-visible .bub{stroke-width:2.4}
-@media (prefers-reduced-motion:no-preference){.bud{transition:transform .25s}.bud:hover,.bud:focus-visible{transform:translateY(-5px)}}
 .brand a{color:inherit;text-decoration:none}
 .hb{font-size:17px;line-height:1;padding:6px 10px;margin-right:10px;vertical-align:2px}
 .menu{position:fixed;top:0;left:0;bottom:0;width:min(350px,86vw);background:var(--card);border-right:1px solid var(--line);box-shadow:4px 0 18px rgba(0,0,0,.18);padding:12px 12px 28px;overflow:auto;z-index:21;transform:translateX(-105%);visibility:hidden}
@@ -184,6 +181,19 @@ button.shh:hover,button.shh:focus-visible{color:var(--accent);border-color:var(-
 .lkln>code{background:none;border:0;padding:0;font-size:12.5px;overflow-wrap:anywhere}
 @media (max-width:600px){.lkln{grid-template-columns:minmax(0,1fr)}}
 @media (prefers-color-scheme:dark){.lkenv{background:#4B1528;border-color:#ED93B1}.lkenv>.lkcap{color:#F4C0D1}}
+/* みんなのおうち（2026-11-17）：ガーデンの下の家の札と、家を押すと移る1ページ */
+.hgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.house{display:block;text-decoration:none;color:var(--text);border:1px solid var(--line);border-radius:14px;padding:8px 10px 10px;background:var(--soft);text-align:center}
+.house:hover,.house:focus-visible{border-color:#D4537E;outline:none;box-shadow:0 0 0 2px #ED93B1}
+@media (prefers-reduced-motion:no-preference){.house{transition:transform .2s}.house:hover,.house:focus-visible{transform:translateY(-3px)}}
+.hsv{display:block;width:100%;max-width:220px;margin:0 auto}
+.house .hn{font-size:15px;font-weight:500;margin-top:4px}
+.house .hs{font-size:13px;color:#993556;margin-top:2px}
+.house .hg{font-size:14px;color:var(--accent);font-weight:500;margin-top:4px}
+.obk{display:inline-block;font-size:14px;color:var(--accent);text-decoration:none;padding:6px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);margin:0 0 10px}
+.otitle{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:500;margin:4px 0 10px}
+.osv{width:64px;height:40px;flex:none}
+@media (prefers-color-scheme:dark){.house .hs{color:#F4C0D1}}
 </style>
 </head>
 <body>
@@ -191,8 +201,8 @@ button.shh:hover,button.shh:focus-visible{color:var(--accent);border-color:var(-
 <div class="brand"><button id="mbtn" class="hb" aria-label="場面の一覧を開く" aria-expanded="false" aria-controls="menu">☰</button><a href="#home">セキュのハッピーガーデン</a><small>科目B 構造の基礎入れ｜経路を見てみよう</small></div>
 <div id="scrim" class="scrim"></div><nav id="menu" class="menu" aria-label="場面の一覧"><div class="mh"><span>場面の一覧</span><button id="mclose" aria-label="一覧を閉じる">✕ 閉じる</button></div><a id="mhome" class="mi top" href="#home">🌱 ガーデン（はじめの画面）</a><a id="mcards" class="mi top" href="#cards">📇 カード一覧（問題つき）</a><div id="mtree"></div></nav>
 <div id="cvscrim" class="scrim cvs"></div><div id="cv" class="cv" role="dialog" aria-modal="true" aria-labelledby="cv-title" hidden><div class="cvh"><div><div id="cv-sub" class="cv-sub"></div><div id="cv-title" class="cv-title"></div></div><button id="cvclose" aria-label="カードを閉じる">✕ 閉じる</button></div><div id="cv-body"></div></div>
-<div id="home" style="display:none"><div class="card" id="basics" style="margin-bottom:12px"></div><div class="card" style="padding:8px 8px 4px"><svg id="garden" width="100%" viewBox="0 0 900 520" role="img" aria-label="ガーデン：まとまりを選ぶ"></svg><div style="font-size:13px;color:var(--sub);padding:2px 8px 6px">キャラか吹き出しをタップすると、そのまとまりの場面へ行けます。メールちゃんをタップすると、覚えるシートの「メールの見た目」が開きます。左上の ☰ を押すと、全部の場面を「まとまり → 場面」の一覧から選べます。場面の画面からガーデンへ戻るときは、左上の「セキュのハッピーガーデン」か「← ガーデンへ」を押します</div></div><div class="card" id="cardlist" style="margin-top:12px"><div class="clh"><span id="cl-title">カード一覧</span><span class="row" id="cl-filter" style="margin:0"></span></div><div class="legend" style="margin:0 0 4px">カードを押すと、仕組みの説明（先に読む）と、そのカードで本番に聞かれる形の問題が開きます。答えは「答えを見る」を押すまで隠れています。場面の中の「この手順に関係するカード」からも開けます</div><div id="cl-body"></div></div></div>
-<div class="sel" id="selwrap"><div class="row" id="groups"></div><div class="row" id="scenes"></div></div>
+<div id="home" style="display:none"><div class="card" id="basics" style="margin-bottom:12px"></div><div class="card" style="padding:8px 8px 4px"><svg id="garden" width="100%" viewBox="0 0 900 520" role="img" aria-label="ガーデン：まとまりを選ぶ"></svg><div style="font-size:13px;color:var(--sub);padding:2px 8px 6px">キャラか吹き出しをタップすると、そのまとまりの場面へ行けます。左上の ☰ を押すと、全部の場面を「まとまり → 場面」の一覧から選べます。場面の画面からガーデンへ戻るときは、左上の「セキュのハッピーガーデン」か「← ガーデンへ」を押します</div></div><div class="card" id="houses" style="margin-top:12px"></div><div class="card" id="cardlist" style="margin-top:12px"><div class="clh"><span id="cl-title">カード一覧</span><span class="row" id="cl-filter" style="margin:0"></span></div><div class="legend" style="margin:0 0 4px">カードを押すと、仕組みの説明（先に読む）と、そのカードで本番に聞かれる形の問題が開きます。答えは「答えを見る」を押すまで隠れています。場面の中の「この手順に関係するカード」からも開けます</div><div id="cl-body"></div></div></div>
+<div id="ouchi" style="display:none"></div><div class="sel" id="selwrap"><div class="row" id="groups"></div><div class="row" id="scenes"></div></div>
 <div class="layout" id="layout">
 <div class="left">
 <div class="card">
@@ -757,6 +767,8 @@ function selector(){
 }
 function openScene(id){
   $('home').style.display='none';
+  $('ouchi').style.display='none';
+  ouchiBack=null;
   $('selwrap').style.display='';
   $('layout').style.display='';
   sc=SCENES.find(s=>s.scene===String(id))||SCENES[0];
@@ -781,9 +793,10 @@ function openScene(id){
 $('pause').onclick=()=>setPause(!paused);
 const GARDEN={'1':['net',150,402,'インターネット'],'2':['srv',300,250,'Web サーバ'],'3':['pc',450,402,'開発の PC'],
   '4':['phone',620,250,'スマホ'],'5':['fw',760,402,'ファイアウォール']};
-// 覚えるシートの案内役（2026-11-17。本人「はっぴーがーでんのなかにメールの見た目のおぼえてほしいなてきなメールちゃんがいてほしい」→ 案1）。
-// 系統 → [形, x, y, 名前, 吹き出しの1行目, 2行目]。その系統のシートに見た目（look）の区画があるときだけ出す。押すと、その区画だけをカードの画面に出す
-const BUDDY={'S02':['mail',312,470,'メールちゃん','わたしの見た目、おぼえてほしいな','メールの見た目 ▶']};
+// みんなのおうちのキャラ（2026-11-17。本人「はっぴーがーでんのなかにメールの見た目のおぼえてほしいなてきなメールちゃんがいてほしい」→ 案1。
+// 「まとまりけいががーでん　おうちは個々に注力したおぼえるべきこと」で、ガーデンから、ガーデンの下の「みんなのおうち」へ移した）。
+// 系統 → [形, 名前, 吹き出し, 押すと開くもの]。その系統の覚えるシートに見た目（look）の区画があるときだけ、家を出す
+const BUDDY={'S02':['mail','メールちゃん','わたしの見た目、おぼえてほしいな','メールの見た目']};
 function scenesOf(g){
   return SCENES.filter(s=>s.group===g)
 }
@@ -842,8 +855,7 @@ function drawGarden(){
         go()
       }
     })
-  });
-  drawBuddies(G)
+  })
 }
 // メールちゃん：カードの図でメールを表す封筒と同じピンクの封筒に、顔と手（x, y が封筒の中心）
 function mailChan(g,x,y,id){
@@ -854,60 +866,88 @@ function mailChan(g,x,y,id){
   el('path',{d:'M'+x+' '+(y-1)+' c-3 -4 -8 -1 -4 3 l4 4 l4 -4 c4 -4 -1 -7 -4 -3z',fill:'#D4537E'},g);
   face(g,id,x,y+8,.8,false)
 }
-function drawBuddies(G){
-  Object.entries(BUDDY).forEach(([k,[kind,x,y,name,say,go]])=>{
-    const s=SHEETS.find(z=>z.keito===k);
-    if(!s||!s.secs.some(c=>c.blocks.some(b=>b.look)))return;
-    const a=el('g',{class:'bud',tabindex:'0',role:'button','aria-label':name+'：'+say+'。'+s.title+' の見た目を開く','data-buddy':k},G);
-    el('ellipse',{cx:x,cy:y+27,rx:32,ry:7,fill:'#7FB85A',opacity:.55},a);
-    if(kind==='mail')mailChan(a,x,y,'bud-'+k);
-    txt(x,y+42,name,'#5F5E5A','middle',a).setAttribute('font-size','13');
-    const bw=196,bh=60,bx=x-bw/2,by=y-20-bh-16;
-    el('rect',{class:'bub',x:bx,y:by,width:bw,height:bh,rx:16,fill:'#FFFFFF',stroke:'#D4537E','stroke-width':1.2},a);
-    el('path',{d:'M'+(x-8)+' '+(by+bh-1)+' L'+x+' '+(by+bh+12)+' L'+(x+8)+' '+(by+bh-1)+'Z',fill:'#FFFFFF',stroke:'#D4537E','stroke-width':1.2},a);
-    el('rect',{x:x-7,y:by+bh-3,width:14,height:4,fill:'#FFFFFF'},a);
-    txt(x,by+23,say,'#72243E','middle',a).setAttribute('font-size','12.5');
-    const t2=txt(x,by+46,go,'#185FA5','middle',a);
-    t2.setAttribute('font-size','15');
-    t2.setAttribute('font-weight','500');
-    a.addEventListener('click',()=>openLook(k,a));
-    a.addEventListener('keydown',e=>{
-      if(e.key==='Enter'||e.key===' '){
-        e.preventDefault();
-        openLook(k,a)
-      }
-    })
-  })
+function buddies(){
+  return Object.entries(BUDDY).map(([k,v])=>{
+    const s=SHEETS.find(z=>z.keito===k),sec=s&&s.secs.find(c=>c.blocks.some(b=>b.look));
+    return sec?{k,kind:v[0],name:v[1],say:v[2],go:v[3],s,sec}:null
+  }).filter(Boolean)
 }
-// 案内役を押したとき（2026-11-17。本人「UXがいいほうにしたい」）：カードと同じ画面を上に重ねて、見た目（look）の区画だけを出す。
-// ガーデンの位置はずれず、✕・外側・Esc で閉じると、押した案内役に戻る。シートの残りの区画は開かない（解く前の入り口にしない）
-function openLook(k,from){
-  const s=SHEETS.find(z=>z.keito===k),sec=s&&s.secs.find(c=>c.blocks.some(b=>b.look));
-  if(!sec)return;
-  cvStack=[];
-  cvCur=null;
-  if($('cv').hidden){
-    cvBack=from||document.activeElement;
-    cvFromScene=false
+// 家の絵（200×150）：屋根と壁と窓の前に、キャラが立つ
+function houseSvg(kind,id){
+  const svg=document.createElementNS(NS,'svg');
+  svg.setAttribute('viewBox','0 0 200 150');
+  svg.setAttribute('class','hsv');
+  svg.setAttribute('aria-hidden','true');
+  el('rect',{x:0,y:118,width:200,height:32,rx:6,fill:'#B9DE8F'},svg);
+  el('path',{d:'M38 66 L100 20 L162 66Z',fill:'#ED93B1',stroke:'#D4537E','stroke-width':2,'stroke-linejoin':'round'},svg);
+  el('rect',{x:50,y:64,width:100,height:60,rx:4,fill:'#FFF7EC',stroke:'#C8A877','stroke-width':1.6},svg);
+  [62,118].forEach(x=>el('rect',{x,y:72,width:20,height:16,rx:2,fill:'#EAF4FB',stroke:'#C8A877','stroke-width':1.2},svg));
+  el('ellipse',{cx:100,cy:137,rx:36,ry:6,fill:'#7FB85A',opacity:.55},svg);
+  if(kind==='mail')mailChan(svg,100,112,id);
+  return svg
+}
+// ---- みんなのおうち（ガーデンの下）。家を押すと、1ページの画面（#ouchi-系統）に移る
+function drawHouses(){
+  const box=$('houses'),bs=buddies();
+  box.innerHTML='';
+  box.style.display=bs.length?'':'none';
+  if(!bs.length)return;
+  box.innerHTML='<div class="clh"><span>🏠 みんなのおうち</span></div><div class="legend" style="margin:0 0 8px">ガーデンは、まとまりごとの流れ。'+
+    'おうちには、1つのことを覚えてほしいキャラが住んでいます。おうちを押すと、そのキャラの覚えてほしいことが1ページで開きます</div>';
+  const g=document.createElement('div');
+  g.className='hgrid';
+  bs.forEach(b=>{
+    const a=document.createElement('a');
+    a.className='house';
+    a.href='#ouchi-'+b.k;
+    a.dataset.buddy=b.k;
+    a.appendChild(houseSvg(b.kind,'bud-'+b.k));
+    a.insertAdjacentHTML('beforeend','<div class="hn">'+esc(b.name)+'のおうち</div><div class="hs">「'+esc(b.say)+'」</div><div class="hg">'+esc(b.go)+' ▶</div>');
+    g.appendChild(a)
+  });
+  box.appendChild(g)
+}
+// おうちの1ページ（重ねる画面にしない。本人「ポップアップ系だとみづらい」）：そのキャラの見た目（look）の区画だけを出す。
+// シートの残りの区画は出さない（解く前の入り口にしない）。「← みんなのおうちへ」か、ブラウザの戻るで、ホームのその家に戻る
+let ouchiBack=null;
+function openOuchi(k){
+  const b=buddies().find(x=>x.k===k);
+  if(!b){
+    location.hash='home';
+    return
   }
-  $('cv-sub').innerHTML='<span class="badge" style="background:#FBEAF0;color:#72243E">覚えるシート</span>'+esc(s.title.replace(/^覚えるシート（(.+)）$/,'$1'));
-  $('cv-title').textContent=sec.head;
-  $('cv-body').innerHTML='<div class="sh">'+SHLEG+sec.blocks.map(shBlock).join('')+
-    '<div class="legend" style="margin:10px 0 0">ほかの区画は、ホームの「'+esc(s.title)+'」にある（カードの問題を解いたあとの見直し用）</div></div>';
-  $('cv-body').scrollTop=0;
-  $('cv').scrollTop=0;
-  $('cv').hidden=false;
-  $('cvscrim').classList.add('open');
-  $('cvclose').focus({preventScroll:true})
+  tok++;
+  if(paused)setPause(false);
+  $('home').style.display='none';
+  $('selwrap').style.display='none';
+  $('layout').style.display='none';
+  const o=$('ouchi');
+  o.innerHTML='<a class="obk" href="#home">← みんなのおうちへ</a>'+
+    '<div class="cv-sub"><span class="badge" style="background:#FBEAF0;color:#72243E">みんなのおうち</span>'+esc(b.name)+'｜'+esc(b.s.title.replace(/^覚えるシート（(.+)）$/,'$1'))+'</div>'+
+    '<h2 class="otitle"></h2><div class="card"><div class="sh">'+SHLEG+b.sec.blocks.map(shBlock).join('')+
+    '<div class="legend" style="margin:10px 0 0">ほかの区画は、ホームの「'+esc(b.s.title)+'」にある（カードの問題を解いたあとの見直し用）</div></div></div>';
+  const h=o.querySelector('.otitle'),ic=document.createElementNS(NS,'svg');
+  ic.setAttribute('viewBox','-42 -24 84 50');
+  ic.setAttribute('class','osv');
+  ic.setAttribute('aria-hidden','true');
+  if(b.kind==='mail')mailChan(ic,0,0,'oh-'+k);
+  h.appendChild(ic);
+  h.appendChild(document.createTextNode(b.sec.head));
+  o.style.display='';
+  ouchiBack=k;
+  window.scrollTo({top:0});
+  o.querySelector('.obk').focus({preventScroll:true})
 }
 function showHome(){
   tok++;
   if(paused)setPause(false);
   $('selwrap').style.display='none';
   $('layout').style.display='none';
+  $('ouchi').style.display='none';
   $('home').style.display='';
   drawBasics();
   drawGarden();
+  drawHouses();
   drawCardList();
   window.scrollTo({top:0})
 }
@@ -1412,8 +1452,9 @@ $('cv').addEventListener('click',e=>{
 function buildMenu(){
   const T=$('mtree');
   T.innerHTML='';
-  const cur=$('home').style.display===''?null:(sc&&sc.scene);
-  $('mhome').classList.toggle('on',!cur);
+  const onO=$('ouchi').style.display==='';  // おうちの1ページでは、どの行にも印を付けない
+  const cur=$('home').style.display===''||onO?null:(sc&&sc.scene);
+  $('mhome').classList.toggle('on',!cur&&!onO);
   [...new Set(SCENES.map(s=>s.group))].sort().forEach(g=>{
     const list=scenesOf(g),d=document.createElement('details');
     d.open=true;
@@ -1472,10 +1513,22 @@ function route(){
   const id=location.hash.slice(1);
   closeCard(true);
   if(!id||id==='home'){
+    const back=ouchiBack;
+    ouchiBack=null;
     showHome();
+    const h=back&&$('houses').querySelector('.house[data-buddy="'+back+'"]');  // おうちの1ページから戻ったら、その家を画面に入れる
+    if(h){
+      h.scrollIntoView({block:'center'});
+      h.focus({preventScroll:true})
+    }
+    return
+  }
+  if(id.startsWith('ouchi-')){
+    openOuchi(id.slice(6));
     return
   }
   if(id==='cards'){
+    ouchiBack=null;
     showHome();
     $('cardlist').scrollIntoView();
     return
