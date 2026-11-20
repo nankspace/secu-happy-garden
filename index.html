@@ -6,8 +6,8 @@
 <meta name="robots" content="noindex, nofollow">
 <title>セキュのハッピーガーデン</title>
 <style>
-:root{--bg:#FAF9F5;--card:#FFFFFF;--soft:#F4F3EE;--text:#1F1E1D;--sub:#5F5E5A;--muted:#8A8983;--line:rgba(0,0,0,.12);--accent:#185FA5;--accent-bg:#E6F1FB;--warn:#854F0B;--warn-bg:#FAEEDA;--danger:#A32D2D;--danger-bg:#FCEBEB;--mono:ui-monospace,"Cascadia Mono",Consolas,"Menlo",monospace}
-@media (prefers-color-scheme:dark){:root{--bg:#1A1A19;--card:#242422;--soft:#2C2C2A;--text:#ECEBE6;--sub:#B4B2A9;--muted:#888780;--line:rgba(255,255,255,.14);--accent:#85B7EB;--accent-bg:#0C447C;--warn:#FAC775;--warn-bg:#412402;--danger:#F09595;--danger-bg:#501313}}
+:root{--bg:#FAF9F5;--card:#FFFFFF;--soft:#F4F3EE;--text:#1F1E1D;--sub:#5F5E5A;--muted:#8A8983;--line:rgba(0,0,0,.12);--accent:#185FA5;--accent-bg:#E6F1FB;--warn:#854F0B;--warn-bg:#FAEEDA;--danger:#A32D2D;--danger-bg:#FCEBEB;--ok:#0F6E56;--ok-bg:#E1F5EE;--mono:ui-monospace,"Cascadia Mono",Consolas,"Menlo",monospace}
+@media (prefers-color-scheme:dark){:root{--bg:#1A1A19;--card:#242422;--soft:#2C2C2A;--text:#ECEBE6;--sub:#B4B2A9;--muted:#888780;--line:rgba(255,255,255,.14);--accent:#85B7EB;--accent-bg:#0C447C;--warn:#FAC775;--warn-bg:#412402;--danger:#F09595;--danger-bg:#501313;--ok:#9FE1CB;--ok-bg:#04342C}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Hiragino Sans","Yu Gothic UI","Meiryo",sans-serif;line-height:1.6}
 .wrap{max-width:1360px;margin:0 auto;padding:16px}
@@ -109,8 +109,21 @@ input[type=range]{accent-color:#378ADD}
 .qz{border:1px solid var(--line);border-radius:12px;padding:10px 14px 12px;margin:12px 0 0;background:var(--soft)}
 .qz .qh{font-size:13px;font-weight:500;color:var(--text)}
 .qz .kd{display:inline-block;font-size:12px;font-weight:400;padding:0 8px;border-radius:8px;background:var(--accent-bg);color:var(--accent);margin-left:8px}
-.qz .qlv,.door .qlv,.cv-sub .qlv{display:inline-block;font-size:12px;font-weight:500;padding:0 8px;border-radius:8px;margin-left:6px;border:1px solid}  /* 問題・部屋の札（2026-11-20） */
+.qz .qlv,.door .qlv,.cv-sub .qlv,.qlvs .qlv,.clpr .qlv{display:inline-block;font-size:12px;font-weight:500;padding:0 8px;border-radius:8px;margin-left:6px;border:1px solid}  /* 問題・部屋の札（2026-11-20） */
 .door .dlv{margin-bottom:2px}
+/* 全部の問題の札・カードの札の内訳・解いた印（2026-11-21） */
+.qlvs{display:inline-flex;flex-wrap:wrap;gap:4px;margin-right:6px;vertical-align:1px}
+.qlvs .qlv,.clpr .qlv{margin-left:0}
+.qz .qst{margin-left:6px;font-size:12px;font-weight:500}
+.qz .qst.ok{color:var(--ok)}.qz .qst.again{color:var(--warn)}
+.qmk{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0 0;padding-top:10px;border-top:1px solid var(--line)}
+.qmk .lbl{flex-basis:100%;font-size:12px;color:var(--sub)}
+.qmk button{padding:6px 14px}
+.qmk button[data-v="ok"][aria-pressed="true"]{background:var(--ok-bg);color:var(--ok);border-color:var(--ok)}
+.qmk button[data-v="again"][aria-pressed="true"]{background:var(--warn-bg);color:var(--warn);border-color:var(--warn)}
+.qleg{margin:12px 0 0}
+.clprog{margin:4px 0 8px;padding:8px 10px;border-radius:10px;background:var(--soft);font-size:13px}
+.clpr{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:2px 0}
 .qlv0{color:var(--danger);background:var(--danger-bg);border-color:var(--danger)}.qlv1{color:var(--accent);background:var(--accent-bg);border-color:var(--accent)}.qlv2{color:var(--sub);background:var(--soft);border-color:var(--line)}
 .qz .q{font-size:15px;font-weight:500;margin:8px 0 0}
 .qz details{margin-top:8px}
@@ -396,6 +409,61 @@ function badge(pr){
 }
 function bxBadge(){
   return '<span class="badge" style="background:var(--accent-bg);color:var(--accent)">初期知識</span>'
+}
+// ---- 問題ごとの札と、解いた印（2026-11-21。本人「問題に対して、必須とか、なにをやればいいかわからない」
+// 「全部それつけられるようにしたら分かりやすくなる」「解く特に必須からといたりして抜け落ちがないか不安」）。
+// 札：問題に lv があればそれ（過去問の抜けから足した問題。講評の正答率から）、無ければカードの印（本文で足りる は 任意）。
+// 決め方の正本は「覚えるべき言葉と仕組みを整理する」の凡例。初期知識編の問題には付けない
+const LVS=['必須','推奨','任意'];
+const LVMEAN={'必須':'本番までに解く','推奨':'時間があれば解く','任意':'飛ばしてよい'};
+function qLv(id,q){
+  if(q.lv)return q.lv;
+  const c=CARDS[id];
+  if(!c)return '';
+  return c[1]==='必須'||c[1]==='推奨'?c[1]:'任意'
+}
+function lvTag(lv,n){
+  return lv?'<span class="qlv qlv'+LVS.indexOf(lv)+'" title="'+esc(lv+'＝'+LVMEAN[lv])+'">'+esc(lv)+(n==null?'':' '+n)+'</span>':''
+}
+// 解いた印：この端末のブラウザにだけ残す（localStorage。公開先がネスペのガーデンと同じなので、名前の頭を secu-garden: にする）。
+// 鍵はカード番号と問いの文から作る。問いの文を直すと、その問題は「まだ」に戻る（取り違えて「できた」になるよりよい）
+const MKEY='secu-garden:marks:v1',MKNAME={ok:'できた',again:'もう一度'};
+let MARKS={},clDirty=false;
+try{
+  MARKS=JSON.parse(localStorage.getItem(MKEY)||'{}')||{}
+}catch(e){
+  MARKS={}
+}
+function qKey(id,q){
+  const s=id+'\n'+q.q;
+  let h=0x811c9dc5;
+  for(let i=0;i<s.length;i++)h=Math.imul(h^s.charCodeAt(i),0x01000193)>>>0;
+  return id+':'+h.toString(36)
+}
+function markOf(id,q){
+  return MARKS[qKey(id,q)]||''
+}
+function setMark(k,v){
+  if(v)MARKS[k]=v;
+  else delete MARKS[k];
+  try{
+    localStorage.setItem(MKEY,JSON.stringify(MARKS))
+  }catch(e){}  // 残せない設定（プライベートの窓など）でも、開いているあいだは効く
+}
+// カードの問題の札の内訳と、解いた印の数
+function cardCount(id){
+  const n={'必須':0,'推奨':0,'任意':0},m={ok:0,again:0};
+  (QUIZ[id]||[]).forEach(q=>{
+    const lv=qLv(id,q),k=markOf(id,q);
+    if(lv)n[lv]++;
+    if(k)m[k]++
+  });
+  return [n,m]
+}
+// カードの頭・一覧・場面の札：カードの印の代わりに「必須 3・推奨 1」のように、問題の札の内訳を出す
+function lvTags(id){
+  const n=cardCount(id)[0],t=LVS.filter(l=>n[l]).map(l=>lvTag(l,n[l])).join('');
+  return t?'<span class="qlvs">'+t+'</span>':badge(CARDS[id]?CARDS[id][1]:'')
 }
 function keitoName(id){
   const k=KEITO.find(x=>x[0]===id.slice(0,3));
@@ -740,7 +808,7 @@ function cards(){
     d.setAttribute('role','button');
     d.tabIndex=0;
     d.setAttribute('aria-label',id+' '+nm+' のカードを開く');
-    d.innerHTML='<div style="font-size:12px;color:var(--sub);margin-bottom:4px">'+badge(pr)+esc(id)+
+    d.innerHTML='<div style="font-size:12px;color:var(--sub);margin-bottom:4px">'+lvTags(id)+esc(id)+
       '</div><div style="font-size:14px;font-weight:500;margin-bottom:4px">'+esc(nm)+
       '</div><div style="font-size:13px;color:var(--sub)">'+esc(core)+'</div>'+
       '<div class="qn">'+(n?'問題 '+n+'問を開く ▶':'カードを開く ▶')+'</div>';
@@ -1360,12 +1428,15 @@ let clFilter='all';
 function drawCardList(){
   const body=$('cl-body');
   body.innerHTML='';
+  clDirty=false;
   const ids=Object.keys(CARDS);
   const nq=ids.reduce((a,id)=>a+(QUIZ[id]||[]).length,0);
   $('cl-title').textContent='カード一覧（'+ids.length+'枚・問題 '+nq+'問）';
   const f=$('cl-filter');
   f.innerHTML='';
-  [['all','全部'],['must','必須だけ'],['rec','必須と推奨']].forEach(([k,t])=>{
+  // 絞り込みは、カードの印ではなく問題の札と解いた印で見る（2026-11-21）。当たる問題が1問でもあるカードを出す。
+  // まだの必須＝札が必須で「できた」を押していない問題（「もう一度」も入る）・もう一度＝「もう一度」を押した問題（札は問わない）
+  [['all','全部'],['must','必須だけ'],['rec','必須と推奨'],['todo','まだの必須'],['again','もう一度']].forEach(([k,t])=>{
     const b=document.createElement('button');
     b.textContent=t;
     if(k===clFilter)b.className='on';
@@ -1376,13 +1447,32 @@ function drawCardList(){
     };
     f.appendChild(b)
   });
-  const ok=pr=>clFilter==='all'||(clFilter==='must'?pr==='必須':pr==='必須'||pr==='推奨');
+  const hit=(id,q)=>{
+    const lv=qLv(id,q),mk=markOf(id,q);
+    return clFilter==='must'?lv==='必須':clFilter==='rec'?lv==='必須'||lv==='推奨':clFilter==='todo'?lv==='必須'&&mk!=='ok':clFilter==='again'?mk==='again':true
+  };
+  const ok=id=>clFilter==='all'||(QUIZ[id]||[]).some(q=>hit(id,q));
+  // 解いた数（必須と推奨）。札の意味と、印の残り方も、ここに書く
+  const sum={'必須':{n:0,ok:0,again:0},'推奨':{n:0,ok:0,again:0}};
+  ids.forEach(id=>(QUIZ[id]||[]).forEach(q=>{
+    const s=sum[qLv(id,q)],mk=markOf(id,q);
+    if(!s)return;
+    s.n++;
+    if(mk)s[mk]++
+  }));
+  const pg=document.createElement('div');
+  pg.className='clprog';
+  pg.innerHTML=Object.entries(sum).map(([l,s])=>'<div class="clpr">'+lvTag(l)+'<span>'+s.n+'問：できた '+s.ok+'・もう一度 '+s.again+'・まだ '+(s.n-s.ok-s.again)+'</span></div>').join('')+
+    '<div class="legend" style="margin:4px 0 0">札は全部の問題に付いています：'+LVS.map(l=>l+'＝'+LVMEAN[l]).join('・')+'。'+
+    '解いたら「答えを見る」の一番下で「できた」か「もう一度」を押すと、この端末のブラウザに残ります（iPad と PC の印はつながりません）。'+
+    '「まだの必須」には、「もう一度」を押した必須の問題も入ります</div>';
+  body.appendChild(pg);
   // 目次（2026-11-20。本人「S10 どこ見づらい」「目次お願い」：単元は まとまりの順に並ぶので、番号では探しにくい）。
   // 番号の順に並べ、押すとその単元の見出しへ飛ぶ。絞り込みで1枚も出ない単元は出さない。各単元の見出しの「↑ 目次」で戻る
   const toc=document.createElement('div');
   toc.className='cltoc';
   toc.innerHTML='<span class="lbl">単元へ飛ぶ</span>';
-  KEITO.filter(([k])=>ids.some(id=>id.slice(0,3)===k&&ok(CARDS[id][1]))).sort((a,b)=>a[0]<b[0]?-1:1).forEach(([k,name])=>{
+  KEITO.filter(([k])=>ids.some(id=>id.slice(0,3)===k&&ok(id))).sort((a,b)=>a[0]<b[0]?-1:1).forEach(([k,name])=>{
     const b=document.createElement('button');
     b.textContent=k;
     b.title=k+' '+name;
@@ -1397,9 +1487,9 @@ function drawCardList(){
   // 初期知識編は優先が無いので、絞り込みに関係なく、まとまり1 の上に出す
   // 編の説明（lead）は、前はホームの段にだけ出していた。ホームから外したので、ここで出す（畳んだ中なので、閉じていれば場所を取らない）
   Object.values(BASICS).forEach(b=>body.appendChild(basicsFold(b,'list',true)));
-  let lastM='';
+  let lastM='',shown=0;
   KEITO.forEach(([k,name,m])=>{
-    const list=ids.filter(id=>id.slice(0,3)===k&&ok(CARDS[id][1])).sort((a,b)=>+a.split('-')[1]-+b.split('-')[1]);
+    const list=ids.filter(id=>id.slice(0,3)===k&&ok(id)).sort((a,b)=>+a.split('-')[1]-+b.split('-')[1]);
     if(!list.length)return;
     if(m!==lastM){
       const h=document.createElement('div');
@@ -1421,16 +1511,20 @@ function drawCardList(){
     const g=document.createElement('div');
     g.className='clg';
     list.forEach(id=>{
-      const [nm,pr]=CARDS[id];
-      const n=(QUIZ[id]||[]).length;
+      const nm=CARDS[id][0];
+      const n=(QUIZ[id]||[]).length,m=cardCount(id)[1];
       const b=document.createElement('button');
       b.className='ci';
-      b.innerHTML=badge(pr)+'<span class="n">'+esc(id)+'</span>'+esc(nm)+'<span class="qn">'+(n?'問題 '+n+'問 ▶':'問題はまだありません')+'</span>';
+      b.dataset.ci=id;
+      b.innerHTML=lvTags(id)+'<span class="n">'+esc(id)+'</span>'+esc(nm)+'<span class="qn">'+
+        (n?'問題 '+n+'問'+(m.ok?'・できた '+m.ok:'')+(m.again?'・もう一度 '+m.again:'')+' ▶':'問題はまだありません')+'</span>';
       b.onclick=()=>openCard(id,b);
-      g.appendChild(b)
+      g.appendChild(b);
+      shown++
     });
     body.appendChild(g)
-  })
+  });
+  if(!shown)body.insertAdjacentHTML('beforeend','<div class="legend" style="margin:10px 0 0">この絞り込みに当たる問題はありません</div>')
 }
 // ---- カードの図（2026-11-14。先に読むの中と、問題の「答えを見る」の中に出す。機器は場面と同じ絵で、手順のボタンで送って見る）
 // 文の書き方は md と同じに加えて、==…== は「その区間で替わった値」、{{…}} は「そのまま」の印
@@ -1707,8 +1801,10 @@ function initFigs(root){
 let cvBack=null,cvFromScene=false,cvWasPaused=false;
 function quizHtml(q,i,id){
   const a=q.a.length>1?'<ol>'+q.a.map(x=>'<li>'+md(x)+'</li>').join('')+'</ol>':'<div>'+md(q.a[0])+'</div>';
-  // 札（2026-11-20。過去問の抜けから足した問題に、必須・推奨・任意を付ける）
-  return '<div class="qz"><div class="qh">問'+(i+1)+'<span class="kd">'+esc(q.kind)+'</span>'+(q.lv?'<span class="qlv qlv'+['必須','推奨','任意'].indexOf(q.lv)+'">'+esc(q.lv)+'</span>':'')+'</div>'+
+  // 札（2026-11-20 に足した問題に付け、2026-11-21 に全部の問題に出すようにした：qLv）と、解いた印（「答えを見る」の一番下で押す）
+  const k=qKey(id,q),mk=MARKS[k]||'';
+  return '<div class="qz"><div class="qh">問'+(i+1)+'<span class="kd">'+esc(q.kind)+'</span>'+lvTag(qLv(id,q))+
+    '<span class="qst'+(mk?' '+mk:'')+'" data-st="'+k+'">'+(mk?esc(MKNAME[mk]):'')+'</span></div>'+
     '<div class="pre"><span class="lb">前提</span>'+md(q.pre)+'</div>'+
     '<div class="q">'+md(q.q)+'</div>'+
     '<details><summary>答えを見る</summary><div class="ans">'+
@@ -1716,6 +1812,8 @@ function quizHtml(q,i,id){
     '<span class="lb">採点で見られる所</span><ul>'+q.pts.map(x=>'<li>'+md(x)+'</li>').join('')+'</ul>'+
     (q.miss?'<span class="lb">よくあるズレ</span><div>'+md(q.miss)+'</div>':'')+
     (FIG[id]&&figAnswers(FIG[id]).some(a=>a.q===i+1)?figHtml(id,'a'+(i+1)):'')+
+    '<div class="qmk" data-mk="'+k+'"><span class="lbl">解いたら押す（この端末に残る）</span>'+
+    ['ok','again'].map(v=>'<button type="button" data-v="'+v+'" aria-pressed="'+(mk===v)+'">'+MKNAME[v]+'</button>').join('')+'</div>'+
     '</div></details></div>'
 }
 // カードの画面の中のリンクで別のカード・初期知識へ移ったときに、戻る先を積んでおく（2026-11-15。土台へのリンクから戻れるように）。
@@ -1735,7 +1833,7 @@ function openCard(id,from,keep){
       setPause(true)
     }
   }
-  $('cv-sub').innerHTML=bx?bxBadge()+esc(id)+'｜'+esc(bx[2]):badge(pr)+esc(id)+'｜'+esc(keitoName(id));
+  $('cv-sub').innerHTML=bx?bxBadge()+esc(id)+'｜'+esc(bx[2]):lvTags(id)+esc(id)+'｜'+esc(keitoName(id));
   $('cv-title').textContent=nm;
   const qs=QUIZ[id]||[];
   const where=scenesOfCard(id);
@@ -1746,6 +1844,7 @@ function openCard(id,from,keep){
   const bases=(BASEOF[id]||[]).filter(b=>BX[b]);
   if(bases.length)h+='<div class="cvbase"><span class="lbl">土台（先に読むと分かりやすい初期知識）</span>'+bases.map(b=>'<a class="mi" href="#" data-card="'+b+'">'+esc(b)+' '+esc(BX[b][0])+'</a>').join('')+'</div>';
   if(INTRO[id])h+='<div class="intro"><span class="lb">先に読む</span>'+md(INTRO[id])+figHtml(id,'intro')+'</div>';
+  if(qs.length&&!bx)h+='<div class="legend qleg">札：'+LVS.map(l=>l+'＝'+LVMEAN[l]).join('・')+'。解いたら「答えを見る」の一番下で「できた」か「もう一度」を押す</div>';
   h+=qs.length?qs.map((q,i)=>quizHtml(q,i,id)).join(''):'<div class="legend">このカードの問題は、まだありません</div>';
   $('cv-body').innerHTML=h;
   initFigs($('cv-body'));
@@ -1760,11 +1859,31 @@ function closeCard(goingAway){
   $('cv').hidden=true;
   $('cvscrim').classList.remove('open');
   if(cvFromScene&&!cvWasPaused&&!goingAway)setPause(false);
+  if(clDirty&&$('home').style.display===''){  // 解いた印を押したら、カード一覧の数と絞り込みを描き直す（2026-11-21）
+    const ci=cvBack&&cvBack.dataset&&cvBack.dataset.ci,y=scrollY;
+    drawCardList();
+    scrollTo(0,y);
+    const nb=ci&&$('cl-body').querySelector('.ci[data-ci="'+ci+'"]');
+    if(ci)cvBack=nb||$('cl-filter').querySelector('.on')
+  }
   if(!goingAway&&cvBack&&cvBack.focus)cvBack.focus({preventScroll:true})
 }
 $('cvclose').onclick=()=>closeCard(false);
 $('cvscrim').onclick=()=>closeCard(false);
 $('cv').addEventListener('click',e=>{
+  const mb=e.target.closest('.qmk button[data-v]');
+  if(mb){
+    const box=mb.closest('.qmk'),k=box.dataset.mk,v=MARKS[k]===mb.dataset.v?'':mb.dataset.v;
+    setMark(k,v);
+    box.querySelectorAll('button[data-v]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===v)));
+    const st=$('cv-body').querySelector('.qst[data-st="'+k+'"]');
+    if(st){
+      st.className='qst'+(v?' '+v:'');
+      st.textContent=v?MKNAME[v]:''
+    }
+    clDirty=true;
+    return
+  }
   if(e.target.closest('[data-back]')){
     e.preventDefault();
     openCard(cvStack.pop(),null,true);
